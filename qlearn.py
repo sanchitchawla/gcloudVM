@@ -10,7 +10,7 @@ Q = np.zeros([env.observation_space.n,env.action_space.n])
 
 lr = .8
 y = .95
-num_episodes = 100000
+num_episodes = 10000
 
 # create list to contain total rewards and steps per episode
 reward_lis = []
