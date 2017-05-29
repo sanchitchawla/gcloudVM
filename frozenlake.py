@@ -35,10 +35,10 @@ updateModel = trainer.minimize(loss)
 
 # Training the network
 
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 
 with tf.Session() as sess:
-    sses.run(init)
+    sess.run(init)
     for i in range(num_episodes):
 
         # Reset env and get observation
@@ -68,7 +68,7 @@ with tf.Session() as sess:
             targetQ[0,action[0]] = reward + y*maxQ1
 
             # Time to train our network using updated target and predicted Q
-            _,W1 = sess.run([updateModel, W], feed_dict = {inputs1: np.identity(16)[s1:s1+1], nextQ:targetQ})
+            _,W1 = sess.run([updateModel, W], feed_dict = {inputs1: np.identity(16)[s:s+1], nextQ:targetQ})
             rAll += reward
             s = s1
             if done:

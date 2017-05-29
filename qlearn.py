@@ -8,9 +8,9 @@ Q = np.zeros([env.observation_space.n,env.action_space.n])
 
 # Learning parameters
 
-lr = .8
-y = .95
-num_episodes = 10000
+lr = .65
+y = .86
+num_episodes = 20000
 
 # create list to contain total rewards and steps per episode
 reward_lis = []
@@ -23,7 +23,7 @@ for i in range(num_episodes):
 	j = 0
 
 	# Q learning 
-	while j < 99:
+	while j < 200:
 		j+=1
 
 		# choose an action with high greed
@@ -39,7 +39,7 @@ for i in range(num_episodes):
 		rAll += reward
 		s = s1
 		if done:
-			break
+		   break
 	reward_lis.append(rAll)
 
 print "Score over time: " + str(sum(reward_lis) / num_episodes)
