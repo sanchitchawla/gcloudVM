@@ -8,7 +8,7 @@ Q = np.zeros([env.observation_space.n,env.action_space.n])
 
 # Learning parameters
 
-lr = .65
+lr = .8
 y = .86
 num_episodes = 20000
 
