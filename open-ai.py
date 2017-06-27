@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import math
 import gym
 
-env = gym.make('CartPole-v0')
+env = gym.make('MountainCar-v0')
 
 # hyperparameters
 H = 10 # number of hidden layer neurons
@@ -13,7 +13,7 @@ batch_size = 5 # every how many episodes to do a param update?
 learning_rate = 1e-2 # feel free to play with this to train faster or more stably.
 gamma = 0.99 # discount factor for reward
 
-D = 4 # input dimensionality
+D = 2 # input dimensionality
 
 tf.reset_default_graph()
 
@@ -26,7 +26,7 @@ layer1 = tf.nn.relu(tf.matmul(observations,W1))
 W2 = tf.get_variable("W2", shape=[H, 1],
            initializer=tf.contrib.layers.xavier_initializer())
 score = tf.matmul(layer1,W2)
-probability = tf.nn.sigmoid(score)
+probability = tf.nn.sigmoid( score)
 
 #From here we define the parts of the network needed for learning a good policy.
 tvars = tf.trainable_variables()
@@ -68,7 +68,7 @@ with tf.Session() as sess:
     rendering = False
     sess.run(init)
     observation = env.reset() # Obtain an initial observation of the environment
-
+    
     # Reset the gradient placeholder. We will collect gradients in 
     # gradBuffer until we are ready to update our policy network. 
     gradBuffer = sess.run(tvars)
@@ -88,14 +88,15 @@ with tf.Session() as sess:
         
         # Run the policy network and get an action to take. 
         tfprob = sess.run(probability,feed_dict={observations: x})
-        action = 1 if np.random.uniform() < tfprob else 0
+        action = 0 if np.random.uniform() > tfprob else 1
         
         xs.append(x) # observation
-        y = 1 if action == 0 else 0 # a "fake label"
+        y = 1 if action != 0 else 0 # a "fake label"
         ys.append(y)
 
         # step the environment and get new measurements
         observation, reward, done, info = env.step(action)
+#	print observation
         reward_sum += reward
 
         drs.append(reward) # record reward (has to be done after we call step() to get reward for previous action)
@@ -130,7 +131,7 @@ with tf.Session() as sess:
                 running_reward = reward_sum if running_reward is None else running_reward * 0.99 + reward_sum * 0.01
                 print 'Average reward for episode %f.  Total average reward %f.' % (reward_sum/batch_size, running_reward/batch_size)
                 
-                if reward_sum/batch_size > 200: 
+                if reward_sum/batch_size >= -110: 
                     print "Task solved in",episode_number,'episodes!'
                     break
                     
