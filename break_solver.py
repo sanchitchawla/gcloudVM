@@ -7,7 +7,7 @@ import tensorflow as tf
 env = gym.make('Breakout-v0')
 observation = env.reset()
 
-EPISODES = 20000
+EPISODES = 2000
 TIMESTAMP = 2000
 GAMMA = 0.99
 ALPHA = 0.005
@@ -57,7 +57,7 @@ class neuralNet:
 
 		self.o_fc2 = tf.matmul(o_fc1,self.W_fc2) + self.B_fc2
 
-		self.L = tf.reduce_sum(tf.square(self.Y - tf.mul(self.o_fc2,self.C)))
+		self.L = tf.reduce_sum(tf.square(self.Y - tf.multiply(self.o_fc2,self.C)))
 
 		self.optimizer = tf.train.AdamOptimizer(ALPHA)
 		self.train_step = self.optimizer.minimize(self.L)
@@ -74,7 +74,7 @@ class neuralNet:
 		self.train_step.run(feed_dict={self.X:x , self.Y:y, self.C:c})
 
 	def saveModel(self,index):
-		save_path = self.saver.save(self.sess, str("./breakout_model/model" + str(index) + ".ckpt"))
+		save_path = self.saver.save(self.sess, str("model" + str(index) + ".ckpt"))
 		print("Model saved in file: %s" % save_path)
 
 	def loadModel(self,index):
@@ -129,7 +129,7 @@ for ep in range(EPISODES):
 	data_batch = {}
 	reset = True
 	for t in range(TIMESTAMP):
-		env.render()
+		#env.render()
 		x = np.array(observation)
 		action, actionval = nnet.forward_pass(x)
 		# print action, actionval

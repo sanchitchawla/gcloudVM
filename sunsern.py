@@ -54,7 +54,7 @@ for i_episode in range(1000):
     r = 0
     for t in range(200):
 
-        env.render()
+#        env.render()
 
         from_state = obs2state(observation)
         #print observation
@@ -76,7 +76,7 @@ for i_episode in range(1000):
             break
 
 
-        if t < 160:
+        if t < 190:
             # only retrain if below target
             P[action,from_state,to_state] += 0.50
             #print P, "P"
