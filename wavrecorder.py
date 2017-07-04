@@ -1,12 +1,19 @@
 import pyaudio
 import wave
- 
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("Seconds")
+parser.add_argument("Name")
+args = parser.parse_args()
+
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
-RECORD_SECONDS = 6
-WAVE_OUTPUT_FILENAME = "sunnytest.wav"
+RECORD_SECONDS = int(args.Seconds)
+WAVE_OUTPUT_FILENAME = args.Name #"sunnytest.wav"
  
 audio = pyaudio.PyAudio()
  
