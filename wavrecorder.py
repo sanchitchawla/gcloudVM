@@ -5,8 +5,8 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
-RECORD_SECONDS = 3
-WAVE_OUTPUT_FILENAME = "pj.wav"
+RECORD_SECONDS = 6
+WAVE_OUTPUT_FILENAME = "sunnytest.wav"
  
 audio = pyaudio.PyAudio()
  
