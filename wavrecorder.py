@@ -6,7 +6,7 @@ CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
 RECORD_SECONDS = 3
-WAVE_OUTPUT_FILENAME = "test.wav"
+WAVE_OUTPUT_FILENAME = "pj.wav"
  
 audio = pyaudio.PyAudio()
  
