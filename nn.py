@@ -1,19 +1,20 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
+import numpy as np
 
 mnist = input_data.read_data_sets("/tmp/data/", one_hot = True)
 
 n_nodes_hl1 = 300
 n_nodes_hl2 = 400
-n_nodes_hl3 = 500
+n_nodes_hl3 = 400
 
 n_classes = 10
 batch_size = 100
 epochs = 10
 
 # height x width
-x = tf.placeholder(dtype = "tf.float32", [None, 784])
-y = tf.placeholder(dtype = "tf.float32")
+x = tf.placeholder("float", [None, 784])
+y = tf.placeholder("float")
 
 def neural_network_model(data):
 
@@ -27,7 +28,7 @@ def neural_network_model(data):
 	hidden_3_layer = {'weights' : tf.Variable(tf.random_normal([n_nodes_hl2, n_nodes_hl3])),
 					  'biases'  : tf.Variable(tf.random_normal([n_nodes_hl3]))}
 
-	output_layer = {'weights' : tf.Variable(tf.random_normal([n_nodes_hl3, n_nodes_hl1])),
+	output_layer = {'weights' : tf.Variable(tf.random_normal([n_nodes_hl3, n_classes])),
 					  'biases'  : tf.Variable(tf.random_normal([n_classes]))}
 
 	l1 = tf.add(tf.matmul(data, hidden_1_layer['weights']) , hidden_1_layer['biases'])
@@ -39,13 +40,13 @@ def neural_network_model(data):
 	l3 = tf.add(tf.matmul(l2,   hidden_3_layer['weights']) , hidden_3_layer['biases'])
 	l3 = tf.nn.relu(l3)
 	
-	output = tf.matmul(l3, output_layer['weights']) + output_layer[biases]
+	output = tf.matmul(l3, output_layer['weights']) + output_layer["biases"]
 
 	return output
 
 def train_neural_network(x):
 	prediction = neural_network_model(x)
-	cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(prediction, y))
+	cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits = prediction, labels = y))
 	optimizer = tf.train.AdamOptimizer().minimize(cost)
 
 	init = tf.global_variables_initializer()
@@ -57,16 +58,16 @@ def train_neural_network(x):
 
 			epoch_loss = 0
 
-			cycles = np.ceil(int(mnist.train.num_examples/ batch_size))
+			cycles = int(np.ceil(int(mnist.train.num_examples/ batch_size)))
 			for i in range(cycles):
 				epoch_x, epoch_y = mnist.train.next_batch(batch_size)
 				_ , c = sess.run([optimizer, cost], feed_dict = {x:epoch_x, y:epoch_y})
 				epoch_loss +=c
 
-				print('Epoch', epoch, "Loss is", epoch_loss)
+			print('Epoch', epoch, "Loss is", epoch_loss)
 
 		correct = tf.equal(tf.argmax(prediction, 1), tf.argmax(y, 1))
-		accuracy  = tf.reduce_mean(tf.cast(correct, dtype = "tf.float32"))
+		accuracy  = tf.reduce_mean(tf.cast(correct, "float"))
 
 		print("Accuracy:", accuracy.eval({x:mnist.test.images, y:mnist.test.labels}))
 
